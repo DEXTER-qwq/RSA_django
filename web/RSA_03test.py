@@ -4,7 +4,7 @@ from sympy import nextprime
 
 key_pair = RSA.generate(bits=1024)
 m = b'123456'
-hash = int.from_bytes(sha512(m).digest(), byteorder='big')
+hash1 = int.from_bytes(sha512(m).digest(), byteorder='big')
 # H(m)
 n = key_pair.n
 e = key_pair.e
@@ -23,11 +23,25 @@ print(f'N={hex(n)}')
 print(f'd={hex(d)}\n')
 print(f'p={hex(p)}')
 print(f'q={hex(q)}\n')
-print(f'hash={hex(hash)}')
+print(f'hash={hex(hash1)}')
 
 
-def blind():
+def init():
+    return hex(n), hex(e), hex(d), hex(R)
+
+
+def blindData(msg):
+    data = blind(msg)
+    signData = sign(data)
+    unblindData = unblind(signData)
+    return hex(data),hex(signData),hex(unblindData)
+
+
+def blind(msg):
     # 盲化
+    # print(f'msg1111{msg}')
+    hash = int.from_bytes(sha512(msg.encode("utf-8")).digest(), byteorder='big')
+    print(f'msg hash {hex(hash)}')
     blind_msg = (pow(R, e) * hash) % n
     # R^e*H(m) mod n
     print(f'blind: {hex(blind_msg)}')
@@ -50,6 +64,7 @@ def unblind(blind_sign):
     unblind_msg = pow(blind_sign * r, 1, n)
     # blind_sign * r mod n
     # H(m)^d mod n
+    print(f'Unblind_signature:\n{hex(unblind_msg)}')
     return unblind_msg
 
 
@@ -58,14 +73,23 @@ def double_Spending():
     pass
 
 
-def verify(sign):
+def verify(sign, msg):
+    print(sign,msg)
+    # sigma,m
     hash_from_sign = pow(sign, e, n)
+    hash = int.from_bytes(sha512(msg.encode("utf-8")).digest(), byteorder='big')
     # sign^e mod n
     # H(m)^d^e mod n == H(m) mod n
+
+    print(f" hash_from_sign {hex(hash_from_sign)}")
+    print(f" hash {hex(hash)}")
+
     if hash == hash_from_sign:
         print('valid')
+        return 'valid'
     else:
         print('invalid')
+        return 'invalid'
 
-
-verify(unblind(sign(blind())))
+# verify(unblind(sign(blind("123456"))),"123456")
+# blind("123456") 盲化
