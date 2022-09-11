@@ -86,10 +86,10 @@ def verify(sign, msg):
 
     if hash == hash_from_sign:
         print('valid')
-        return 'valid'
+        return 1
     else:
         print('invalid')
-        return 'invalid'
+        return 0
 
 # verify(unblind(sign(blind("123456"))),"123456")
 # blind("123456") 盲化
