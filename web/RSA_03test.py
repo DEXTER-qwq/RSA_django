@@ -2,28 +2,27 @@ from hashlib import sha512
 from Crypto.PublicKey import RSA
 from sympy import nextprime
 
-key_pair = RSA.generate(bits=1024)
-m = b'123456'
-hash1 = int.from_bytes(sha512(m).digest(), byteorder='big')
+# msg
+# m = b'123456'
+# hash1 = int.from_bytes(sha512(m).digest(), byteorder='big')
 # H(m)
+key_pair = RSA.generate(bits=1024)
 n = key_pair.n
 e = key_pair.e
 d = key_pair.d
 p = key_pair.p
 q = key_pair.q
-# msg
 R = nextprime(p)
 # gcd(R,m)=1, 随机生成
-
 print("Public key")
 print(f'n={hex(n)}')
 print(f'e={hex(e)}')
 print('Private key')
 print(f'N={hex(n)}')
 print(f'd={hex(d)}\n')
-print(f'p={hex(p)}')
-print(f'q={hex(q)}\n')
-print(f'hash={hex(hash1)}')
+# print(f'p={hex(p)}')
+# print(f'q={hex(q)}\n')
+# print(f'hash={hex(hash1)}')
 
 
 def init():
@@ -39,7 +38,7 @@ def blindData(msg):
 
 def blind(msg):
     # 盲化
-    # print(f'msg1111{msg}')
+    # print(f'msg: {msg}')
     hash = int.from_bytes(sha512(msg.encode("utf-8")).digest(), byteorder='big')
     print(f'msg hash {hex(hash)}')
     blind_msg = (pow(R, e) * hash) % n
