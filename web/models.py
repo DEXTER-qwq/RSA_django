@@ -7,3 +7,19 @@ class SpendingInfo(models.Model):
     msg = models.TextField()
     class Meta:
         db_table = "SpendingInfo"  # 更改表名
+
+class User(models.Model):
+    #id = models.AutoField(primary_key=True) #主键省略不写
+    name = models.TextField()
+    money = models.TextField()
+    class Meta:
+        db_table = "User"  # 更改表名
+
+class Message(models.Model):
+    #id = models.AutoField(primary_key=True) #主键省略不写
+    payer = models.TextField()
+    payee = models.TextField()
+    sigma = models.TextField()
+    msg = models.TextField()
+    class Meta:
+        db_table = "Message"  # 更改表名
