@@ -30,6 +30,19 @@ print(f'd={hex(d)}\n')
 # print(f'q={hex(q)}\n')
 # print(f'hash={hex(hash1)}')
 
+def cryptocurrencyAdd():
+    # 返回新建加密货币公私钥
+    key_pair = RSA.generate(bits=1024)
+    n = key_pair.n
+    e = key_pair.e
+    d = key_pair.d
+    print("Public key")
+    print(f'n={hex(n)}')
+    print(f'e={hex(e)}')
+    print('Private key')
+    print(f'N={hex(n)}')
+    print(f'd={hex(d)}\n')
+    return hex(n), hex(e), hex(d)
 
 def init():
     # return hex(n), hex(e), hex(d), hex(R)

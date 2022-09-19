@@ -1,6 +1,7 @@
 import json
+# import org.json.JSONObject
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 import web.RSA_03test as blindSign
 from web.models import SpendingInfo, Message, User
 
@@ -41,16 +42,16 @@ def double(request):
 
 
 def pay(request):
-    payer = request.GET.get("payer")
-    payee = request.GET.get("payee")
+    # payer = request.GET.get("payer")
+    # payee = request.GET.get("payee")
     msg = request.GET.get("msg")
     money = request.GET.get("money")
     for i in range(0, int(money)):
         ob = Message()
-        ob.payer = payer
-        ob.payee = payee
-        ob.msg = msg+str(i)
-        ob.sigma = blindSign.payData(msg+str(i))
+        # ob.payer = payer
+        # ob.payee = payee
+        ob.msg = msg + str(i)
+        ob.sigma = blindSign.payData(msg + str(i))
         ob.save()
         print('1')
     # jsonObj = json.dumps(blindSign.payData(payer, payee, msg))
@@ -60,4 +61,9 @@ def pay(request):
 
 
 def getUser(request):
-    pass
+    user = User.objects
+    # print(user.values())
+    # print(user.values()[0])
+    print(list(user.values()))
+    # 转换类型为list, 方便jsonRes返回json数组
+    return JsonResponse(list(user.values()),safe=False)
