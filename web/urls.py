@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from web.views import init, blind,double, pay,getUser
+from web.views import init, blind,double, pay,getUser,getMessage,newCurrency,delCurrency,showCurrency
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -10,5 +10,9 @@ urlpatterns = [
     path('double', double, name="double"),  # double?sigma=&msg
     path('pay', pay, name="pay"),  # pay?payer=&payee=&msg
     path('getUser', getUser, name="getUser"), # getUser
+    path('getMessage', getMessage, name="getMessage"),  # getMessage
+    path('newCurrency', newCurrency, name="newCurrency"),  # newCurrency
+    path('delCurrency', delCurrency, name="delCurrency"),  # delCurrency
+    path('showCurrency', showCurrency, name="showCurrency"),  # delCurrency
 
 ]

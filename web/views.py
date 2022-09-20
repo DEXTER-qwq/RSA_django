@@ -1,9 +1,9 @@
 import json
 # import org.json.JSONObject
 from django.shortcuts import render
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse, JsonResponse
 import web.RSA_03test as blindSign
-from web.models import SpendingInfo, Message, User
+from web.models import SpendingInfo, Message, User, Cryptocurrency
 
 
 # Create your views here.
@@ -66,4 +66,35 @@ def getUser(request):
     # print(user.values()[0])
     print(list(user.values()))
     # 转换类型为list, 方便jsonRes返回json数组
-    return JsonResponse(list(user.values()),safe=False)
+    return JsonResponse(list(user.values()), safe=False)
+
+
+def getMessage(request):
+    message = Message.objects.order_by("-id")[:10]
+    print(list(message.values()))
+    return JsonResponse(list(message.values()), safe=False)
+
+
+def newCurrency(request):
+    value = request.GET.get("value")
+    key = blindSign.cryptocurrencyAdd()
+    ob = Cryptocurrency()
+    ob.n = key[0]
+    ob.e = key[1]
+    ob.d = key[2]
+    ob.value = value
+    ob.save()
+    return HttpResponse("1")
+
+
+def delCurrency(request):
+    value = request.GET.get("value")
+    ob = Cryptocurrency.objects
+    currency = ob.get(value=value).delete()
+    return HttpResponse(currency)
+
+
+def showCurrency(request):
+    ob = Cryptocurrency.objects
+    print(list(ob.values()))
+    return JsonResponse(list(ob.values()), safe=False)

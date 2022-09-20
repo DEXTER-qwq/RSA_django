@@ -29,5 +29,6 @@ class Cryptocurrency(models.Model):
     n = models.TextField()
     e = models.TextField()
     d = models.TextField()
+    value = models.TextField()
     class Meta:
         db_table = "Cryptocurrency"  # 更改表名

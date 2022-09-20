@@ -7,23 +7,23 @@ from sympy import nextprime
 # m = b'123456'
 # hash1 = int.from_bytes(sha512(m).digest(), byteorder='big')
 # H(m)
-key_pair = RSA.generate(bits=1024)
-n = key_pair.n
-e = key_pair.e
-d = key_pair.d
-p = key_pair.p
-q = key_pair.q
+# key_pair = RSA.generate(bits=1024)
+# n = key_pair.n
+# e = key_pair.e
+# d = key_pair.d
+# p = key_pair.p
+# q = key_pair.q
 # R = nextprime(p)
 # R = random.randint(0,n)
 
 # random.randint(0,9)
 # gcd(R,m)=1, 随机生成
-print("Public key")
-print(f'n={hex(n)}')
-print(f'e={hex(e)}')
-print('Private key')
-print(f'N={hex(n)}')
-print(f'd={hex(d)}\n')
+# print("Public key")
+# print(f'n={hex(n)}')
+# print(f'e={hex(e)}')
+# print('Private key')
+# print(f'N={hex(n)}')
+# print(f'd={hex(d)}\n')
 
 
 # print(f'p={hex(p)}')
