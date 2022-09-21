@@ -16,4 +16,6 @@ urlpatterns = [
     path('showCurrency', showCurrency, name="showCurrency"),  # delCurrency
     path('readCurrency',readCurrency,name="readCurrency"), # readCurrency
     path('userPay', userPay, name="userPay"),  # userPay?payer=&payee=&msg
+    path('currencyVerify', currencyVerify, name="currencyVerify"),  # currencyVerify?payee=&sigmaInput=&msgInput
+
 ]

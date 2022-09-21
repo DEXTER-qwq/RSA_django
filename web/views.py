@@ -95,7 +95,7 @@ def delCurrency(request):
 
 
 def showCurrency(request):
-    ob = Cryptocurrency.objects
+    ob = Cryptocurrency.objects.order_by("value")
     print(list(ob.values()))
     return JsonResponse(list(ob.values()), safe=False)
 
@@ -147,19 +147,49 @@ def returnCurrency(msg, currencyList):
         'sigma':'',
         'msg':'',
     }
+    tmp={
+        'sigma':'',
+        'msg':'',
+    }
     # for i in list(ob.values()):
     #     for j in currencyList:
     #         msg=msg+str(j)
     #         blindSign.payData(msg,i["n"],i["e"],i["d"])
     for i in range(0, len(list(ob.values()))):
         for j in range(0, int(currencyList[i])):
-            msg = msg + str(i) + "@" + str(j)
+            msg = msg + str(i) + "@"
             unblind = blindSign.payData(msg, int(list(ob.values())[i]["n"],16), int(list(ob.values())[i]["e"],16), int(list(ob.values())[i]["d"],16))
             data['sigma']=unblind
             data['msg']=msg
-            value.append(data)
+            print(data)
+            tmp=data.copy()
+            value.append(tmp)
+    print(value)
     return value
 
 
 def currencyVerify(request):
-    return HttpResponse("invalid")
+    payee = request.GET.get("payee")
+    sigmaInput = request.GET.get("sigmaInput")
+    msgInput = request.GET.get("msgInput")
+    try:
+        mod = SpendingInfo.objects  # 获取SpendingInfo模型的Model操作对象
+        spending = mod.get(sigma=sigmaInput, msg=msgInput)
+        spending.__dict__.pop("_state")
+        print(spending.__dict__)
+        return HttpResponse("双花")
+    except:
+        ob = Cryptocurrency.objects.order_by("-value")
+        for i in range(0, len(list(ob.values()))):
+            if blindSign.verify(int(sigmaInput,16),str(msgInput),int(list(ob.values())[i]["e"],16),int(list(ob.values())[i]["n"],16)):
+                spendingOb=SpendingInfo()
+                spendingOb.sigma=sigmaInput
+                spendingOb.msg=msgInput
+                spendingOb.save()
+                userOb = User.objects
+                thePayee = userOb.get(name=payee)
+                thePayee.money=thePayee.money+int(list(ob.values())[i]["value"])
+                thePayee.save()
+                return HttpResponse('valid')
+        return HttpResponse('invalid')
+
