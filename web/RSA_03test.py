@@ -3,6 +3,7 @@ import random
 from Crypto.PublicKey import RSA
 from sympy import nextprime
 
+
 # msg
 # m = b'123456'
 # hash1 = int.from_bytes(sha512(m).digest(), byteorder='big')
@@ -44,16 +45,17 @@ def cryptocurrencyAdd():
     print(f'd={hex(d)}\n')
     return hex(n), hex(e), hex(d)
 
-def init():
-    # return hex(n), hex(e), hex(d), hex(R)
-    return hex(n), hex(e), hex(d)
+
+# def init():
+#     # return hex(n), hex(e), hex(d), hex(R)
+#     return hex(n), hex(e), hex(d)
 
 
-def payData(msg):
+def payData(msg, n, e, d):
     R = random.randint(0, n)
-    data = blind(msg, R)
-    signData = sign(data)
-    unblindData = unblind(signData,R)
+    data = blind(msg, R, e, n)
+    signData = sign(data, d, n)
+    unblindData = unblind(signData, R, n)
     return hex(unblindData)
 
 
@@ -64,7 +66,7 @@ def blindData(msg):
     return hex(data), hex(signData), hex(unblindData)
 
 
-def blind(msg, R):
+def blind(msg, R, e, n):
     # 盲化
     # print(f'msg: {msg}')
     hash = int.from_bytes(sha512(msg.encode("utf-8")).digest(), byteorder='big')
@@ -76,7 +78,7 @@ def blind(msg, R):
     # M
 
 
-def sign(msg):
+def sign(msg, d, n):
     # 对M进行签名
     blind_signature = pow(msg, d, n)
     # M^d mod n
@@ -84,7 +86,7 @@ def sign(msg):
     return blind_signature
 
 
-def unblind(blind_sign,R):
+def unblind(blind_sign, R, n):
     # 除盲
     r = pow(R, -1, n)
     # R 的逆元
@@ -100,7 +102,7 @@ def double_Spending():
     pass
 
 
-def verify(sign, msg):
+def verify(sign, msg, e, n):
     print(sign, msg)
     # sigma,m
     hash_from_sign = pow(sign, e, n)
@@ -118,5 +120,16 @@ def verify(sign, msg):
         print('invalid')
         return 0
 
+
 # verify(unblind(sign(blind("123456"))),"123456")
 # blind("123456") 盲化
+def decompose(value, list):
+    # 传入有序数组
+    back = []
+    # print(list)
+    for i in list:
+        times = int(value / i)
+        value = value - times * i
+        print(times, i)
+        back.append(times)
+    return back

@@ -11,7 +11,7 @@ class SpendingInfo(models.Model):
 class User(models.Model):
     #id = models.AutoField(primary_key=True) #主键省略不写
     name = models.TextField()
-    money = models.TextField()
+    money = models.IntegerField()
     class Meta:
         db_table = "User"  # 更改表名
 
@@ -29,6 +29,6 @@ class Cryptocurrency(models.Model):
     n = models.TextField()
     e = models.TextField()
     d = models.TextField()
-    value = models.TextField()
+    value = models.IntegerField()
     class Meta:
         db_table = "Cryptocurrency"  # 更改表名

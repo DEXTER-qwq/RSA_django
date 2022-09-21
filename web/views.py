@@ -98,3 +98,68 @@ def showCurrency(request):
     ob = Cryptocurrency.objects
     print(list(ob.values()))
     return JsonResponse(list(ob.values()), safe=False)
+
+
+def userPay(request):
+    payer = request.GET.get("payer")
+    msg = request.GET.get("msg")
+    money = request.GET.get("money")
+    # try:
+    ob = User.objects
+    payer = ob.get(name=payer)
+    # print(payer)
+    # print(type(payer.money))
+    # print(type(int(money)))
+    if payer.money > int(money):
+        payer.money = payer.money - int(money)
+        payer.save()
+        # TODO 加密json数组
+        list = blindSign.decompose(int(money), readCurrency())
+        print(list)
+        # returnCurrency(msg,list)
+        return JsonResponse(returnCurrency(msg,list),safe=False)
+    else:
+        return HttpResponse("1")
+    # except:
+    #     return HttpResponse("false")
+
+
+def readCurrency():
+    ob = Cryptocurrency.objects.order_by("-value")
+    print(list(ob.values()))
+    print(len(list(ob.values())))
+    print(list(ob.values())[0])
+
+    # print(ob.values_list("value"))
+    value = []
+    for i in list(ob.values()):
+        value.append(i["value"])
+        # print(i["value"])
+    print(value)
+    # 获得有序数组
+    return value
+
+
+def returnCurrency(msg, currencyList):
+    ob = Cryptocurrency.objects.order_by("-value")
+    value = []
+    data={
+        'sigma':'',
+        'msg':'',
+    }
+    # for i in list(ob.values()):
+    #     for j in currencyList:
+    #         msg=msg+str(j)
+    #         blindSign.payData(msg,i["n"],i["e"],i["d"])
+    for i in range(0, len(list(ob.values()))):
+        for j in range(0, int(currencyList[i])):
+            msg = msg + str(i) + "@" + str(j)
+            unblind = blindSign.payData(msg, int(list(ob.values())[i]["n"],16), int(list(ob.values())[i]["e"],16), int(list(ob.values())[i]["d"],16))
+            data['sigma']=unblind
+            data['msg']=msg
+            value.append(data)
+    return value
+
+
+def currencyVerify(request):
+    return HttpResponse("invalid")
