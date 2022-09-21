@@ -49,7 +49,11 @@ def cryptocurrencyAdd():
 # def init():
 #     # return hex(n), hex(e), hex(d), hex(R)
 #     return hex(n), hex(e), hex(d)
-
+def blindData(msg):
+    data = blind(msg)
+    signData = sign(data)
+    unblindData = unblind(signData)
+    return hex(data), hex(signData), hex(unblindData)
 
 def payData(msg, n, e, d):
     R = random.randint(0, n)
@@ -57,13 +61,6 @@ def payData(msg, n, e, d):
     signData = sign(data, d, n)
     unblindData = unblind(signData, R, n)
     return hex(unblindData)
-
-
-def blindData(msg):
-    data = blind(msg)
-    signData = sign(data)
-    unblindData = unblind(signData)
-    return hex(data), hex(signData), hex(unblindData)
 
 
 def blind(msg, R, e, n):
